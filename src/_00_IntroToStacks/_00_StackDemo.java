@@ -34,6 +34,7 @@ public class _00_StackDemo {
          * Note: calling the pop() method on an empty stack will cause
          * an error. The avoid this, the Stack isEmpty() or size() methods
          * can be called beforehand to make sure this stack isn't empty.
+         *WHAT THIS MEAN? isEmpty() or size() ????? <-------------------- <------------------
          */
         
         /*
