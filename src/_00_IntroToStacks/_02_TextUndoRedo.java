@@ -2,6 +2,7 @@ package _00_IntroToStacks;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Stack;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,7 +28,11 @@ public class _02_TextUndoRedo implements KeyListener {
 	JFrame frame;
 	JPanel panel;
 	JLabel label;
-	String text;
+	boolean ctrHeld;
+	boolean undoing;
+	
+	Stack<Character> deleted = new Stack<Character>();
+	
 	
 	_02_TextUndoRedo(){
 		frame = new JFrame();
@@ -36,38 +41,67 @@ public class _02_TextUndoRedo implements KeyListener {
 		label = new JLabel();
 		frame.add(panel.add(label));
 		frame.addKeyListener(this);
-		text = "";
+		ctrHeld = false;
+		undoing = false;
 	}
 	
-	void updateType() {
-		System.out.println(text);
-		label.setText(text);
-		frame.pack();
-	}
+	
 	
 	public static void main(String[] args) {
 		_02_TextUndoRedo object = new _02_TextUndoRedo();
 		
+	}
+	
+	void deleteKey() {
+		String subText = label.getText().substring(0,label.getText().length()-1);
+		label.setText(subText);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		//String text  = e.getKeyChar() + "";
-		text = text + e.getKeyChar();
-		updateType();
 		
 	}
-
+	
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+		if (e.getKeyCode() == 8 & label.getText().length() >= 1) {
+			deleted.push(label.getText().charAt(label.getText().length()-1));
+			deleteKey();
+		}
+		else {
+			if(e.getKeyCode() != 8 & e.getKeyCode() != 17) {
+				
+			String text = label.getText() + e.getKeyChar();
+			label.setText(text);
+	
+			}
+		}
+		
+		//System.out.println(label.getText());
+		//System.out.println(deleted);
+		frame.pack();
+		
+		if(e.getKeyCode() == 17) {
+			ctrHeld = true;
+		}
+		if(ctrHeld & e.getKeyCode() == 90) {
+			//System.out.println();
+			System.out.println(e.getKeyCode());
+			System.out.println("Undo");
+		}
+	//HERE: UNDO WORKS, BUT ADDS BLANK CHARACTER ON LABEL FOR SOME REASON
+		//MAKE ADD KEY METHOD FOR WHEN UNDOING
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+		
 		
 	}
 	
