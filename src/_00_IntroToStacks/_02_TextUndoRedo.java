@@ -56,6 +56,15 @@ public class _02_TextUndoRedo implements KeyListener {
 		String subText = label.getText().substring(0,label.getText().length()-1);
 		label.setText(subText);
 	}
+	
+	void undoKey() {
+		
+		deleteKey();
+		if(!deleted.empty()) {
+		String subText = label.getText() + deleted.pop();
+		label.setText(subText);
+		}
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -91,6 +100,9 @@ public class _02_TextUndoRedo implements KeyListener {
 		}
 		if(ctrHeld & e.getKeyCode() == 90) {
 			//System.out.println();
+			
+			undoKey();
+			
 			System.out.println(e.getKeyCode());
 			System.out.println("Undo");
 		}
