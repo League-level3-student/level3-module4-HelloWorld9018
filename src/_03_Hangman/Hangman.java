@@ -1,7 +1,10 @@
 package _03_Hangman;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Stack;
 
@@ -12,8 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-public class Hangman {
+public class Hangman implements KeyListener {
 	
 
 	public void setup(Utilities utilities) {
@@ -35,22 +39,43 @@ public class Hangman {
 		createDisplay(words.pop());
 	}
 	
-	static void createDisplay(String word) {
+	 void createDisplay(String word) {
+		 
+		 int strikes = 0;
+		 String incorrectLetters = "";
+		 
 		JFrame frame = new JFrame();
 		frame.setVisible(true);
-		JPanel panel = new JPanel();
+		JPanel masterPanel = new JPanel();
+		JPanel middlePanel = new JPanel();
+		JPanel bottomPanel = new JPanel();
 		JLabel image = new JLabel();
-		JLabel label = new JLabel();
+		JLabel letters = new JLabel();
+		JLabel incorrect = new JLabel();
+		JPanel topPanel = new JPanel();
+		JLabel blanks = new JLabel();
 		JLabel space = new JLabel();
+		JLabel guess = new JLabel();
+		JTextField textfield = new JTextField();
+		textfield.addKeyListener(this);
 		
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+		incorrect.setText(" Strikes: " + strikes);
+		letters.setText("<html> Incorrect: <br/>" + incorrectLetters + "</html>");
+		guess.setText("Guess: ");
+		textfield.setPreferredSize(new Dimension(25, 25));
 		
-		frame.add(panel);
-		panel.add(image);
-		panel.add(space);
-		panel.add(label);
+		frame.add(masterPanel);
+		masterPanel.add(topPanel);
+		masterPanel.add(middlePanel);
+		masterPanel.add(bottomPanel);
+		masterPanel.setLayout(new BoxLayout(masterPanel, BoxLayout.PAGE_AXIS));
+
+		addAll(topPanel, letters, image, incorrect);
+		addAll(middlePanel, space, blanks);
+		addAll(bottomPanel, guess, textfield);
+
 		
-		frame.setSize(new Dimension(250, 170));
+		frame.setSize(new Dimension(250, 200));
 		
 		String text = "";
 		
@@ -63,16 +88,16 @@ public class Hangman {
 		}*/
 		image.setIcon(loadImage(0));
 		image.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//frame.pack();
 		
-		label.setText(text);
-		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		blanks.setText(text);
+		blanks.setAlignmentX(Component.CENTER_ALIGNMENT);
 		space.setText("  ");
-		//frame.pack();
+
 	}
 
 	
-	public static ImageIcon loadImage(int num) {
+	public ImageIcon loadImage(int num) {
 		String hangmanfile = "Hangman_" + num + ".jpg";
 		try {
 			return new ImageIcon(ImageIO.read(new Hangman().getClass().getResourceAsStream(hangmanfile)));
@@ -80,6 +105,35 @@ public class Hangman {
 
 			return null;
 		}
+	}
+	
+	public void updateScores () {
+		
+	}
+	
+	public void addAll (Container container, Component... components) {
+		for(int i  = 0; i <components.length; i++) {
+			container.add(components[i]);
+		}
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
