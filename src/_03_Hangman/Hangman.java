@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 import javax.imageio.ImageIO;
@@ -19,12 +20,15 @@ import javax.swing.JTextField;
 
 public class Hangman implements KeyListener {
 	
-
+	Stack<String> words = new Stack<String>();
+	String text = "";
+	String word = "";
+	
 	public void setup(Utilities utilities) {
 		
 		String rounds = JOptionPane.showInputDialog("Enter the number of rounds you would like to attempt (1-266): ");
 		int r = Integer.parseInt(rounds);
-		Stack<String> words = new Stack<String>();
+		
 		
 		for(int i = 0; i<r; i++) {
 			String random = utilities.readRandomLineFromFile("dictionary.txt");
@@ -35,12 +39,14 @@ public class Hangman implements KeyListener {
 			
 			words.add(random);
 		}
-	
-		createDisplay(words.pop());
+		word = words.pop();
+		createDisplay(word);
 	}
 	
+	JLabel blanks = new JLabel();
+	
 	 void createDisplay(String word) {
-		 
+		 System.out.println(word);
 		 int strikes = 0;
 		 String incorrectLetters = "";
 		 
@@ -53,7 +59,7 @@ public class Hangman implements KeyListener {
 		JLabel letters = new JLabel();
 		JLabel incorrect = new JLabel();
 		JPanel topPanel = new JPanel();
-		JLabel blanks = new JLabel();
+		
 		JLabel space = new JLabel();
 		JLabel guess = new JLabel();
 		JTextField textfield = new JTextField();
@@ -77,7 +83,7 @@ public class Hangman implements KeyListener {
 		
 		frame.setSize(new Dimension(250, 200));
 		
-		String text = "";
+		
 		
 		for(int i = 0; i< word.length(); i++) {
 			text = text + "_ ";
@@ -107,6 +113,10 @@ public class Hangman implements KeyListener {
 		}
 	}
 	
+	public void updateDisplay() {
+		blanks.setText(text);
+	}
+	
 	public void updateScores () {
 		
 	}
@@ -117,11 +127,41 @@ public class Hangman implements KeyListener {
 		}
 		
 	}
-
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
+		System.out.println("yes1: " + e.getKeyChar());
+		char[] wordChar = word.toCharArray();
+		char[] textChar = text.toCharArray();
+		ArrayList<Character> textArray = new ArrayList<Character>();
 		
+		System.out.println(wordChar.length);
+		for(int i = 0; i<wordChar.length; i++) {
+			System.out.println("hi: "+ wordChar[i]);
+			textArray.add(wordChar[i]);
+		if(e.getKeyChar()==(wordChar[i])){
+			System.out.println("yes2");
+			String c = "" + wordChar[i];
+			System.out.println("letter: " + c);
+			/*
+			 * 
+			 *   -----
+			 *   01234
+			 *   ----n
+			 */  
+			textArray.remove(i);
+			textArray.add(i, wordChar[i]);
+			
+//			wut is happening???
+			for(int k = 0; k < textArray.size(); k++) {
+				text += textArray.get(k).toString();
+			}
+			System.out.println("text: " + text);
+			updateDisplay();
+		}
+		
+		}
 	}
 
 	@Override
