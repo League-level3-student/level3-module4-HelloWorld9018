@@ -21,8 +21,14 @@ import javax.swing.JTextField;
 public class Hangman implements KeyListener {
 	
 	Stack<String> words = new Stack<String>();
-	String text = "";
+	StringBuilder text = new StringBuilder("");
 	String word = "";
+	JTextField textfield;
+	JLabel incorrect;
+	String incorrectLetters;
+	JLabel letters;
+	int hp;
+	
 	
 	public void setup(Utilities utilities) {
 		
@@ -47,8 +53,8 @@ public class Hangman implements KeyListener {
 	
 	 void createDisplay(String word) {
 		 System.out.println(word);
-		 int strikes = 0;
-		 String incorrectLetters = "";
+		 hp = 6;
+		 incorrectLetters = "";
 		 
 		JFrame frame = new JFrame();
 		frame.setVisible(true);
@@ -56,16 +62,16 @@ public class Hangman implements KeyListener {
 		JPanel middlePanel = new JPanel();
 		JPanel bottomPanel = new JPanel();
 		JLabel image = new JLabel();
-		JLabel letters = new JLabel();
-		JLabel incorrect = new JLabel();
+		letters = new JLabel();
+		incorrect = new JLabel();
 		JPanel topPanel = new JPanel();
 		
 		JLabel space = new JLabel();
 		JLabel guess = new JLabel();
-		JTextField textfield = new JTextField();
+		textfield = new JTextField();
 		textfield.addKeyListener(this);
 		
-		incorrect.setText(" Strikes: " + strikes);
+		incorrect.setText(" HP: " + hp);
 		letters.setText("<html> Incorrect: <br/>" + incorrectLetters + "</html>");
 		guess.setText("Guess: ");
 		textfield.setPreferredSize(new Dimension(25, 25));
@@ -86,17 +92,18 @@ public class Hangman implements KeyListener {
 		
 		
 		for(int i = 0; i< word.length(); i++) {
-			text = text + "_ ";
+			text = text.append("_ ");
+					//+ "_ ";
 		}
 		//add images
 		/*if() {
 			
 		}*/
-		image.setIcon(loadImage(0));
+		image.setIcon(loadImage(6));
 		image.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		
-		blanks.setText(text);
+		blanks.setText(text.toString());
 		blanks.setAlignmentX(Component.CENTER_ALIGNMENT);
 		space.setText("  ");
 
@@ -105,6 +112,7 @@ public class Hangman implements KeyListener {
 	
 	public ImageIcon loadImage(int num) {
 		String hangmanfile = "Hangman_" + num + ".jpg";
+		System.out.println(hangmanfile);
 		try {
 			return new ImageIcon(ImageIO.read(new Hangman().getClass().getResourceAsStream(hangmanfile)));
 		} catch (IOException e) {
@@ -114,7 +122,10 @@ public class Hangman implements KeyListener {
 	}
 	
 	public void updateDisplay() {
-		blanks.setText(text);
+		textfield.setText("");
+		blanks.setText(text.toString());
+		incorrect.setText(" HP: " + hp);
+		letters.setText("<html> Incorrect: <br/>" + incorrectLetters + "</html>");
 	}
 	
 	public void updateScores () {
@@ -131,37 +142,37 @@ public class Hangman implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
+		boolean correct = false;
 		System.out.println("yes1: " + e.getKeyChar());
 		char[] wordChar = word.toCharArray();
-		char[] textChar = text.toCharArray();
-		ArrayList<Character> textArray = new ArrayList<Character>();
 		
 		System.out.println(wordChar.length);
 		for(int i = 0; i<wordChar.length; i++) {
 			System.out.println("hi: "+ wordChar[i]);
-			textArray.add(wordChar[i]);
+			String c = "" + e.getKeyChar();
 		if(e.getKeyChar()==(wordChar[i])){
+			correct = true;
 			System.out.println("yes2");
-			String c = "" + wordChar[i];
-			System.out.println("letter: " + c);
-			/*
-			 * 
-			 *   -----
-			 *   01234
-			 *   ----n
-			 */  
-			textArray.remove(i);
-			textArray.add(i, wordChar[i]);
 			
-//			wut is happening???
-			for(int k = 0; k < textArray.size(); k++) {
-				text += textArray.get(k).toString();
-			}
+			System.out.println("letter: " + e.getKeyChar());
+			
+			
+			text.replace(i*2, (i*2)+1, c);
+
 			System.out.println("text: " + text);
-			updateDisplay();
+	
+		}
+	
 		}
 		
-		}
+			if(!correct) {
+				System.out.println("INCORRECT LETTER!!!");
+				hp -= 1 ;
+				incorrectLetters += e.getKeyChar() + ", ";
+			}
+		
+		updateDisplay();
+		
 	}
 
 	@Override
