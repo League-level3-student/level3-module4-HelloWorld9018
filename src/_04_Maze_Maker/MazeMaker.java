@@ -14,6 +14,13 @@ public class MazeMaker {
     private static Random randGen = new Random();
     private static Stack<Cell> uncheckedCells = new Stack<Cell>();
 
+    static int row;
+    static int col;
+    static String side;
+    static boolean alongRows;
+    static boolean zero;
+    static int timesCalled = 0;
+    
     public static Maze generateMaze(int r, int c) {
         rows = r;
         cols = c;
@@ -23,35 +30,113 @@ public class MazeMaker {
         //    This will be the starting point. Then select a random cell along
         //    the opposite wall and remove its exterior wall. This will be the
         //    finish line.
+       
+        alongRows = new Random().nextBoolean();
+        zero = new Random().nextBoolean();
+        chooseCell();
+        eraseWall();
+        //SET side WALL FALSE, then opposite
+         
+         //maze.myCells[0][0].setNorthWall(false);
+  
         
         // 2. select a random cell in the maze to start 
+        int ranRow = new Random().nextInt(rows);
+        int ranCol = new Random().nextInt(cols);
         
         // 3. call the selectNextPath method with the randomly selected cell
-
+        selectNextPath(maze.myCells[ranRow][ranCol]);
+        
         return maze;
     }
+    
+    static void eraseWall() {
+        if(side .equals("NORTH") ) {
+        	maze.myCells[row][col].setNorthWall(false);
+        	
+        	
+        }
+        else if(side .equals("EAST")) {
+        	maze.myCells[row][col].setEastWall(false);
+        	
+        }
+        else if(side .equals("SOUTH")) {
+        	maze.myCells[row][col].setSouthWall(false);
+        }
+        else if(side .equals("WEST")) {
+        	maze.myCells[row][col].setWestWall(false);
+        }
+        else {
+        	System.out.println("error");
+        }
+        if(timesCalled<2) {
+        zero = !zero;
+        chooseCell();
+        eraseWall();
+        }
+    }
 
+    static void chooseCell() {
+    	timesCalled++;
+    if(alongRows) {
+    	if(zero == true) {
+    		row = 0;
+    		//NORTH
+    		side = "NORTH";
+    	}
+    	else {
+    		row = rows-1;
+    		//SOUTH
+    		side = "SOUTH";
+    	}
+    	col = new Random().nextInt(cols);
+    }
+    else {
+    	//along columns
+    	if(zero == true) {
+    		col = 0;
+    		//WEST
+    		side = "WEST";
+    	}
+    	else {
+    		col = cols-1;
+    		//EAST
+    		side = "EAST";
+    	}
+    	row = new Random().nextInt(rows);
+    }
+    }
+    
     // 4. Complete the selectNextPathMethod
     private static void selectNextPath(Cell currentCell) {
         // A. SET currentCell as visited
-
+    	currentCell.setBeenVisited(true);
         // B. check for unvisited neighbors using the cell
-
+    	ArrayList<Cell> unvisitedNeighbors = getUnvisitedNeighbors(currentCell);
         // C. if has unvisited neighbors,
+    	if(!unvisitedNeighbors.isEmpty()) {
+    		int ranNeighbor = new Random().nextInt(unvisitedNeighbors.size());
+    		Cell otherCell = unvisitedNeighbors.get(ranNeighbor);
+    		uncheckedCells.push(otherCell);
+    		removeWalls(currentCell, otherCell);
+    		currentCell = otherCell;
+    		currentCell.setBeenVisited(true);
+    		selectNextPath(currentCell);
+    		
+    	}
+        // C1. select one at random. ^
 
-        // C1. select one at random.
+        // C2. push it to the stack ^
 
-        // C2. push it to the stack
+        // C3. remove the wall between the two cells ^
 
-        // C3. remove the wall between the two cells
+        // C4. make the new cell the current cell and SET it as visited ^
 
-        // C4. make the new cell the current cell and SET it as visited
-
-        // C5. call the selectNextPath method with the current cell
+        // C5. call the selectNextPath method with the current cell ^
 
 
         // D. if all neighbors are visited
-
+//CONTINUE HERE
         // D1. if the stack is not empty
 
         // D1a. pop a cell from the stack
