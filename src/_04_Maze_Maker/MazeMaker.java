@@ -136,7 +136,11 @@ public class MazeMaker {
 
 
         // D. if all neighbors are visited
-//CONTINUE HERE
+
+    	if(getUnvisitedNeighbors(currentCell).isEmpty() && !uncheckedCells.isEmpty()) {
+    		currentCell = uncheckedCells.pop();
+    		selectNextPath(currentCell);
+    	}
         // D1. if the stack is not empty
 
         // D1a. pop a cell from the stack

@@ -1,6 +1,7 @@
 package _04_Maze_Maker;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ public class MazeDisplay extends JPanel{
     private Maze maze;
 
     MazeDisplay(){
+    	
         super();
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
@@ -25,8 +27,11 @@ public class MazeDisplay extends JPanel{
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(true);
         window.pack();
-
-        maze = MazeMaker.generateMaze(5, 5);
+        
+        int ranx = new Random().nextInt(15)+8;
+    	int rany = new Random().nextInt(15)+8;
+        maze = MazeMaker.generateMaze(ranx, rany);
+        window.pack();
         repaint();
     }
 

@@ -8,7 +8,7 @@ public class Cell {
     private int row;
     private int col;
 
-    private int size = 100;
+    private int size = 30;
 
     private boolean visited;
 
